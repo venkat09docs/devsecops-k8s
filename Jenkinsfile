@@ -32,5 +32,15 @@ pipeline {
               }              
             }
         } 
+
+        stage('K8s Deployment - DEV') {
+            steps {
+
+              withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s-config-file', namespace: '', serverUrl: '') {
+                    sh "sed -i 's#replace#gvenkat/numericapp:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+                    sh "kubectl apply -f k8s_deployment_service.yaml"
+              }                            
+            }
+        } 
     }
 }
