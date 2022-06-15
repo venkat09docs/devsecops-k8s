@@ -21,5 +21,13 @@ pipeline {
               }
             }
       }  
+
+      stage('Docker Build and Push') {
+            steps {
+              sh 'printenv'
+              sh 'docker build -t gvenkat/numericapp:"$GIT_COMMIT" .'
+              sh 'docker push gvenkat/numericapp:"$GIT_COMMIT"'
+            }
+        } 
     }
 }
