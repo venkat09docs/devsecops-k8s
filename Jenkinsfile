@@ -34,8 +34,15 @@ pipeline {
       }
 
       stage('Sonar Scanner - SAST') {
-            steps {
+            withSonarQubeEnv('sonarqube') {
               sh "mvn sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.host.url=http://52.74.218.166:9000 -Dsonar.login=c1ad7f5383ce943555f4018834e0a11f2b686829"
+            }
+
+            timeout(time: 2, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
+              def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+              if (qg.status != 'OK') {
+                error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
             }
       }
 
