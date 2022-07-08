@@ -33,6 +33,14 @@ pipeline {
         }
       }
 
+      stage('Sonar Scanner - SAST') {
+            steps {
+              sh "mvn sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.host.url=http://52.74.218.166:9000 -Dsonar.login=c1ad7f5383ce943555f4018834e0a11f2b686829"
+            }
+      }
+
+      
+
       stage('Docker Build and Push') {
             steps {
 
